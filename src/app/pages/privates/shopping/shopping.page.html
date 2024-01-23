@@ -1,0 +1,78 @@
+<section id="products-page" class="h-100 pt-5">
+  <header class="d-flex justify-content-between align-items-center">
+    <h4>Products List</h4>
+    <button class="btn btn-danger" (click)="logout()">Logout</button>
+  </header>
+
+  <article class="py-5">
+    <div class="d-flex gap-3">
+      <mat-form-field>
+        <mat-label>Category</mat-label>
+        <mat-select [(value)]="selectedCategory" (selectionChange)="categorySelectionChange()">
+          <mat-option *ngFor="let category of categories" [value]="category">
+            {{category}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Limit</mat-label>
+        <mat-select [(value)]="selectedPageSize" (selectionChange)="sizeSelectionChange()">
+          <mat-option *ngFor="let size of pagesSize" [value]="size">
+            {{size}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <table #table mat-table [dataSource]="dataSource" class="shadow">
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef>ID</th>
+        <td mat-cell *matCellDef="let element">{{element.id}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="title">
+        <th mat-header-cell *matHeaderCellDef>Title</th>
+        <td mat-cell *matCellDef="let element">{{element.title}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="category">
+        <th mat-header-cell *matHeaderCellDef>Category</th>
+        <td mat-cell *matCellDef="let element">{{element.category}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="price">
+        <th mat-header-cell *matHeaderCellDef>Price</th>
+        <td mat-cell *matCellDef="let element"> {{element.price | currency}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let element">
+          <button class="btn btn-success" (click)="details(detailsModal, element)">Open</button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <mat-paginator #paginator [pageSizeOptions]="pagesSize" [pageSize]="selectedPageSize"
+      class="shadow"></mat-paginator>
+  </article>
+</section>
+
+<ng-template #detailsModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">{{productDetail.title}}</h4>
+    <button class="btn btn-success" (click)="modal.dismiss('Cross click')">x</button>
+  </div>
+  <div class="modal-body">
+    <img class="d-flex" [src]="productDetail.image">
+    <p class="small font-bold text-center">{{productDetail.category}}</p>
+    <p>{{productDetail.description}}</p>
+    <div class="d-flex justify-content-between">
+      <p>Price</p>
+      <p>{{ productDetail.price | currency}}</p>
+    </div>
+  </div>
+</ng-template>
